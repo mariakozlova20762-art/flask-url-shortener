@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+
+# Env
+.env
+
+# Flask
+instance/
+*.log
+
+# Docker
+*.tar
+docker-data/
+postgres_data/
+redis_data/
+
+# OS
+.DS_Store
+Thumbs.db

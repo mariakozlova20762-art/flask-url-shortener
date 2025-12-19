@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика ссылки</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-chart-bar"></i> Статистика ссылки</h1>
+            <a href="/" class="btn-back">
+                <i class="fas fa-arrow-left"></i> На главную
+            </a>
+        </header>
+
+        <main>
+            <div class="stats-header">
+                <div class="short-link-info">
+                    <h2>{{ short_url }}</h2>
+                    <p class="original-url">
+                        <strong>Ведет на:</strong> 
+                        <a href="{{ short_link.original_url }}" target="_blank">
+                            {{ short_link.original_url|truncate(60) }}
+                        </a>
+                    </p>
+                    <div class="meta-info">
+                        <span class="meta-item">
+                            <i class="far fa-calendar"></i> 
+                            Создана: {{ short_link.created_at.strftime('%d.%m.%Y %H:%M') }}
+                        </span>
+                        {% if short_link.last_clicked_at %}
+                        <span class="meta-item">
+                            <i class="far fa-clock"></i> 
+                            Последний клик: {{ short_link.last_clicked_at.strftime('%d.%m.%Y %H:%M') }}
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="total-clicks">
+                    <div class="click-count">
+                        <i class="fas fa-mouse-pointer"></i>
+                        <span class="count">{{ total_clicks }}</span>
+                        <span class="label">Всего кликов</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3><i class="fas fa-desktop"></i> Браузеры</h3>
+                    <div class="stat-list">
+                        {% if browser_stats %}
+                            {% for browser, count in browser_stats %}
+                            <div class="stat-item">
+                                <span class="stat-label">{{ browser or 'Неизвестно' }}</span>
+                                <span class="stat-value">{{ count }}</span>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="no-data">Нет данных о браузерах</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <h3><i class="fas fa-mobile-alt"></i> Устройства</h3>
+                    <div class="stat-list">
+                        {% if device_stats %}
+                            {% for device, count in device_stats %}
+                            <div class="stat-item">
+                                <span class="stat-label">{{ device or 'Неизвестно' }}</span>
+                                <span class="stat-value">{{ count }}</span>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="no-data">Нет данных об устройствах</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-history"></i> Последние клики (макс. 50)</h3>
+                {% if stats %}
+                <div class="table-container">
+                    <table class="clicks-table">
+                        <thead>
+                            <tr>
+                                <th>Время</th>
+                                <th>IP-адрес</th>
+                                <th>Браузер</th>
+                                <th>ОС</th>
+                                <th>Устройство</th>
+                                <th>Источник</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in stats %}
+                            <tr>
+                                <td>{{ stat.clicked_at.strftime('%H:%M %d.%m.%Y') }}</td>
+                                <td>{{ stat.ip_address or 'Неизвестно' }}</td>
+                                <td>{{ stat.browser or 'Неизвестно' }}</td>
+                                <td>{{ stat.os or 'Неизвестно' }}</td>
+                                <td>{{ stat.device or 'Неизвестно' }}</td>
+                                <td class="referrer">
+                                    {% if stat.referrer != 'Direct' %}
+                                        <a href="{{ stat.referrer }}" target="_blank" title="{{ stat.referrer }}">
+                                            {{ stat.referrer|truncate(30) }}
+                                        </a>
+                                    {% else %}
+                                        {{ stat.referrer }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="no-data">Пока нет данных о кликах</p>
+                {% endif %}
+            </div>
+            
+            <div class="actions">
+                <a href="/" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Создать новую ссылку
+                </a>
+                <button onclick="window.location.reload()" class="btn btn-secondary">
+                    <i class="fas fa-sync-alt"></i> Обновить статистику
+                </button>
+                <button onclick="window.print()" class="btn btn-success">
+                    <i class="fas fa-print"></i> Печать
+                </button>
+            </div>
+        </main>
+
+        <footer>
+            <p>Статистика обновляется в реальном времени &copy; 2024</p>
+        </footer>
+    </div>
+</body>
+</html>
