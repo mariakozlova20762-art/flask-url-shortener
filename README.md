@@ -13,3 +13,12 @@
 ### Запуск
 ```bat
 start.bat
+
+## 🚀 Запуск через Docker 
+
+### Запуск
+```bat
+start-docker.bat
+
+## 🚀 Запуск через 'CMD' 
+docker compose up --build
