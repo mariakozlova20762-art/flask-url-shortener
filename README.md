@@ -22,3 +22,21 @@ start-docker.bat
 
 ## 🚀 Запуск через 'CMD' 
 docker compose up --build
+
+## Структура проекта 
+
+app/
+├── src/
+│   ├── app.py
+│   ├── srcdatabase.py
+│   ├── srcmodels.py
+│   ├── srcutils.py
+│   ├── templates/
+│   └── static/
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── start.bat
+├── docker-start.bat
+└── README.md
+
